@@ -1,5 +1,19 @@
 class RegistrationsController < Devise::RegistrationsController
 
+  def create
+    @user = User.new(params[:user])
+    @user.add_role(params[:plan])
+
+    begin
+      @user.save
+    rescue Exception => e
+      redirect_to root_path, :notice => e.message
+      return
+    end
+
+    redirect_to root_path
+  end
+
   def new
     @plan = params[:plan]
     if @plan
